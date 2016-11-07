@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>{{teacher.name}}个人主页</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+    <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<style type="text/css">
+    .banji_box {
+        background-color: rgba(162, 167, 164, 0.6);
+    }
+</style>
+<div class="container">
+	<div class="row clearfix">
+        {% for teacher_class in teacher_classes %}
+		<div class="col-md-12 column">
+			<h2>
+                {{teacher_class.subjectCd_DESC}}
+			</h2>
+
+			<div class="row clearfix">
+                {% for banji in teacher_class.banji %}
+				<div class="col-md-4 column banji_box">
+					<h2>
+						{{banji.banji_DESC}}
+					</h2>
+					<p>
+                          <a class="btn"  onclick="javascript:openWin({{teacher_class.subjectCd}},{{banji.grade}},{{banji.classes}},{{banji.textbook}})" href="#">查看 »</a>
+					</p>
+				</div>
+
+                {% endfor %}
+			</div>
+		</div>
+        {% endfor %}
+
+	</div>
+</div>
+<script type="text/javascript">
+function openWin(s,g,c,t){
+        window.location.href = "{% url 'showTaskList' %}"+"?s="+s+"&g="+g+"&c="+c+"&t="+t;
+    }
+</script>
+</body>
+</html>
