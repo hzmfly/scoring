@@ -12,7 +12,9 @@ import json
 # Create your views here.
 
 logger = logging.getLogger(__name__)
-
+"""
+ 用户登录
+"""
 def user_login(request):
 
     _username = request.POST['username']
