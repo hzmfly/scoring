@@ -68,11 +68,12 @@ def getTeacher_ClassesList(teacher):
 
 """ 获取教辅的所有章节列表及章节名称
     输入： _textbook 教辅编号，int
-    输出： 章节编号及章节名称列表的List:
+    输出： 章节编号及章节名称列表的List,捎带上每个章节对应的答题纸编号:
             [
                 {
                     'chapter' : val,
                     'chapterName' : val
+                    'cards':[val,val...]
                 }
             ]
 
@@ -83,17 +84,68 @@ def getTextbook_ChaptersList(_textbook):
         return None
     else:
         _result_list = []
+        i=-1
         currentChapter = -1
         for item in _chapters:
             if item.chapter != currentChapter:   #去重
                 tmp = {
                     'chapter':item.chapter,
                     'chapterName':item.chapterName,
+                    'cards':[item.id],
                 }
                 _result_list.append(tmp)
                 currentChapter = item.chapter
+                i=i+1
+            else:
+                _result_list[i]['cards'].append(item.id)
+
 
         return _result_list
 
+""" 获取教辅某章节对应的答题纸编号
+    输入： 教辅编号: textbook , 章节：chapter
+    输出： 答题纸编号列表的list：[val,val...]
+
+"""
+def getChapter_CardsList(_textbook,_chapter):
+    _cards = dbProcess.cardQueryByChapter(_textbook, _chapter)
+    if _cards is None:
+        return None
+    else :
+        return _cards
+
+
+""" 获取答题纸对应的题目及学生完成情况
+    输入：答题纸列表：cardsList
+    输出：题目列表及完成情况List:
+        [
+            {
+                'topicInfo':object 题目信息
+                'performance':{
+                                'finished':val
+                                'average':val
+                            }
+            }
+        ]
+"""
+
+def getTopic_PerformanceList(_cards, _grade, _classes):
+    #查找学生信息
+    _studentList = dbProcess.studentsQueryByClasses(_grade,_classes)
+    if _studentList is None:
+        logger.error("Error: there is no student exist! ")
+        return None
+    _studentNum = len(_studentList)
+    _result_list = []
+    for cardId in _cards:     #所有答题纸
+        _topic = dbProcess.topicQueryByCard(cardId)  #某答题纸查出的题目
+        if _topic is not None:
+            for item in _topic:   #每个题目
+                _result_list.append({
+                    'topicInfo':item
+                })
+
+
+    return _result_list
 
 
