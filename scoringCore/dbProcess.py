@@ -31,7 +31,7 @@ def classesQueryByTeacher(_teacher):
 
 def insertTeacher_Classes(param):
     try:
-        _teacher = Teacher.objects.get(teacherId=param['teacher'])
+        _teacher = Teacher.objects.get(teacher=param['teacher'])
     except ObjectDoesNotExist:
         logger.debug('teacher id dose not exist when insert into Teacher_Clsses')
         return False
@@ -70,6 +70,22 @@ def studentsQueryByClasses(_grade,_classes):
     try:
         _result = Student.objects.filter(grade=_grade, classes=_classes).order_by("id")
     except ObjectDoesNotExist:
-        logger.debug('there is no student queryed by grad %d,classes %d ', _grade,_classes)
+        logger.debug('there is no student queryed by grade %d,classes %d ', _grade,_classes)
+        return None
+    return _result
+
+def topicQueryByCardAndTopic(_card, _topic):
+    try:
+        _result = Card_Topic.objects.filter(card=_card, topic=_topic)
+    except ObjectDoesNotExist:
+        logger.debug('there is no topic queryed by card %d, topic %d ', _card, _topic)
+        return None
+    return _result
+
+def taskQueryByGradeAndClasses(_grade, _classes, _card, _topic):
+    try:
+        _result = Task.objects.filter(grade=_grade, classes=_classes, card=_card, topic=_topic).order_by("id")
+    except ObjectDoesNotExist:
+        logger.debug('there is no task queryed by grade %d,classes %d ,card %d,topic %d', _grade, _classes,_card,_topic)
         return None
     return _result

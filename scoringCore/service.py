@@ -1,4 +1,5 @@
 from scoringCore import dbProcess
+from scoringCore import constant
 import logging
 
 logger = logging.getLogger(__name__)
@@ -131,9 +132,9 @@ def getChapter_CardsList(_textbook,_chapter):
 
 def getTopic_PerformanceList(_cards, _grade, _classes):
     #查找学生信息
-    _studentList = dbProcess.studentsQueryByClasses(_grade,_classes)
+    _studentList = dbProcess.studentsQueryByClasses(_grade, _classes)
     if _studentList is None:
-        logger.error("Error: there is no student exist! ")
+        logger.error("Error: there is no student exist in class: %d,%d! ",_grade,_classes)
         return None
     _studentNum = len(_studentList)
     _result_list = []
@@ -141,11 +142,42 @@ def getTopic_PerformanceList(_cards, _grade, _classes):
         _topic = dbProcess.topicQueryByCard(cardId)  #某答题纸查出的题目
         if _topic is not None:
             for item in _topic:   #每个题目
+                item.topic
                 _result_list.append({
                     'topicInfo':item
                 })
 
 
     return _result_list
+
+def calculateScoringRateByClasses(_grade, _classes, _cardId, _topic):
+    _studentList = dbProcess.studentsQueryByClasses(_grade, _classes)
+    if _studentList is None:
+        logger.error("Error: there is no student exist in class: %d,%d ",_grade,_classes)
+        return -1
+    _studentNum = len(_studentList)
+    _topicInfo = dbProcess.topicQueryByCardAndTopic(_cardId, _topic)
+    if _topicInfo is None:
+        logger.error("Error: there is no topic exist : %d,%d ", _cardId, _topic)
+        return -1
+    _point = _topicInfo[1].point
+    _taskList = dbProcess.taskQueryByGradeAndClasses(_grade,_classes,_cardId,_topic)
+    if _taskList is None:
+        logger.info("info: there is no task exist : %d,%d ", _cardId, _topic)
+        return -1
+    _submitStudentNum = len(_taskList)
+    _totalpoints = 0
+    for item in _taskList:
+        _totalpoints = _totalpoints+item.score
+    _scoringRate = _totalpoints/(_submitStudentNum*_point)
+    return _scoringRate
+
+
+
+
+
+
+
+
 
 
