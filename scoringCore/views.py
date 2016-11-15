@@ -36,14 +36,16 @@ def welcome(request):
 
 @login_required
 def chapterList(request):
-    _subjectCd = request.GET.get('s')
+    _school = request.GET.get('s')
     _grade=request.GET.get('g')
     _classes = request.GET.get('c')
     _textbook = request.GET.get('t')
     _chaptersList = service.getTextbook_ChaptersList(_textbook)
 
     return render(request, 'chapterList.html', {'chaptersList':_chaptersList,
+                                                'textbook':_textbook,
                                              'banji_DESC':str(constant.GRADE_NAME[int(_grade)-1][1])+str(_classes)+"班",
+                                            'school':_school,
                                              'grade':_grade,
                                                 'classes':_classes
                                                 }
@@ -51,12 +53,16 @@ def chapterList(request):
 
 @login_required
 def taskList(request):
-    _str = request.GET.get('cards')
-    _cards = _str.split(',')
+
 
     _grade = request.GET.get('g')
     _classes = request.GET.get('c')
-    _taskList = service.getTopic_PerformanceList(_cards, _grade, _classes)
-    return render(request, 'taskList.html', {'cardsList': _taskList})
+
+    return render(request, 'taskList.html')
 
 
+def querySection(request):
+    _textbook = request.GET.get('textbook')
+    _chapter = request.GET.get('chapter')
+    _sectionList =service.getChapter_SectionsList(_textbook, _chapter)
+    return JsonResponse({'sectionList': _sectionList})

@@ -4,6 +4,7 @@ from scoringCore.models import Card
 from scoringCore.models import Card_Topic
 from scoringCore.models import Student
 from scoringCore.models import Task
+from scoringCore.models import Topic
 from django.core.exceptions import ObjectDoesNotExist
 import logging
 
@@ -44,11 +45,25 @@ def insertTeacher_Classes(param):
 
 def chapterQueryByTextbook(_textbook):
     try:
-        _chapterList = Card.objects.filter(textbook=_textbook).order_by("chapter")
+        _obj = Topic.objects.filter(textbook=_textbook).order_by("chapter")
     except ObjectDoesNotExist:
         logger.debug('there is no chapter queryed by textbook %d', _textbook)
         return None
-    return _chapterList
+    return _obj
+
+def sectionQueryByTextbookAndChapter(_textbook, _chapter):
+    try:
+        _obj = Topic.objects.filter(textbook=_textbook, chapter=_chapter).order_by("section")
+    except ObjectDoesNotExist:
+        logger.debug('there is no section queryed by textbook %d chapter %d ', _textbook, _chapter)
+        return None
+    return _obj
+
+
+
+
+
+
 
 def cardQueryByChapter(_textbook,_chapter):
     try:
@@ -89,3 +104,5 @@ def taskQueryByGradeAndClasses(_grade, _classes, _card, _topic):
         logger.debug('there is no task queryed by grade %d,classes %d ,card %d,topic %d', _grade, _classes,_card,_topic)
         return None
     return _result
+
+

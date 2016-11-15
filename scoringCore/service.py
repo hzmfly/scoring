@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
                     'banji':[
                                 {
                                     'banji_DESC':desc
+                                    'school':val,
                                     'grade':val
                                     'classes':val
                                     'textbook':val
@@ -42,6 +43,7 @@ def getTeacher_ClassesList(teacher):
             if item.subjectCd == subjectCd:
                 _result_list[i]['banji'].append({
                     'banji_DESC':item.get_grade_display() + str(item.classes) + "班",
+                    'school':item.school,
                     'grade': item.grade,
                     'classes': item.classes,
                     'textbook': item.textbook.id,
@@ -53,6 +55,7 @@ def getTeacher_ClassesList(teacher):
                     'subjectCd_DESC': item.get_subjectCd_display(),
                     'banji': [{
                         'banji_DESC': item.get_grade_display() + str(item.classes) + "班",
+                        'school': item.school,
                         'grade': item.grade,
                         'classes': item.classes,
                         'textbook': item.textbook.id,
@@ -69,12 +72,11 @@ def getTeacher_ClassesList(teacher):
 
 """ 获取教辅的所有章节列表及章节名称
     输入： _textbook 教辅编号，int
-    输出： 章节编号及章节名称列表的List,捎带上每个章节对应的答题纸编号:
+    输出： 章节编号及章节名称列表的List:
             [
                 {
                     'chapter' : val,
                     'chapterName' : val
-                    'cards':[val,val...]
                 }
             ]
 
@@ -84,24 +86,60 @@ def getTextbook_ChaptersList(_textbook):
     if _chapters is None:
         return None
     else:
+        _chapterList = distinct(_chapters, 'chapter') #按chapter去重
         _result_list = []
-        i=-1
-        currentChapter = -1
-        for item in _chapters:
-            if item.chapter != currentChapter:   #去重
-                tmp = {
-                    'chapter':item.chapter,
-                    'chapterName':item.chapterName,
-                    'cards':[item.id],
-                }
-                _result_list.append(tmp)
-                currentChapter = item.chapter
-                i=i+1
-            else:
-                _result_list[i]['cards'].append(item.id)
-
-
+        for item in _chapterList:
+            tmp = {
+                'chapter':item.chapter,
+                'chapterName':item.chapterName,
+            }
+            _result_list.append(tmp)
         return _result_list
+
+""" 获取教辅某一章的所有小节列表及小节名称
+    输入： _textbook 教辅编号，int
+          _chapter  章节编号，int
+    输出： 小节编号及小节名称列表的List:
+            [
+                {
+                    'section' : val,
+                    'sectionName' : val
+                }
+            ]
+"""
+
+def getChapter_SectionsList(_textbook, _chapter):
+    _sections = dbProcess.sectionQueryByTextbookAndChapter(_textbook, _chapter)
+    if _sections is None:
+        return None
+    else:
+        _sectionList = distinct(_sections, 'section') #按chapter去重
+        _result_list = []
+        for item in _sectionList:
+            tmp = {
+                'section':item.section,
+                'sectionName':item.sectionName,
+            }
+            _result_list.append(tmp)
+        return _result_list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 """ 获取教辅某章节对应的答题纸编号
     输入： 教辅编号: textbook , 章节：chapter
@@ -172,7 +210,19 @@ def calculateScoringRateByClasses(_grade, _classes, _cardId, _topic):
     _scoringRate = _totalpoints/(_submitStudentNum*_point)
     return _scoringRate
 
+"""
+    根据传进来的唯一参数进行去重，由于使用sqlite不属于关系型数据库，django不支持distinct操作
+"""
+def distinct(obj, arg):
+    cur = None
+    _result = []
+    for item in obj:
+        tmp = eval("item."+arg)
+        if(cur != tmp):
+            _result.append(item)
+            cur = tmp
 
+    return _result
 
 
 

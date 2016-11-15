@@ -21,28 +21,69 @@
 		</div>
 	</div>
 	<div class="row clearfix">
-        {% for item in chaptersList %}
-		<div class="col-md-12 column row-background">
-			<h3>
-                {{item.chapterName}}
-			</h3>
 
-			<div class="row clearfix ">
-                <p>
-                    <a class="btn"  onclick="javascript:openWin({{item.cards}})" href="#">查看 »</a>
-                </p>
-			</div>
+		<div class="col-md-4 column ">
+            <table class="table table-hover">
+
+				<tbody>
+				{% for item in chaptersList %}
+					<tr>
+						<td>
+							第{{item.chapter}}章 {{item.chapterName}}     <a class="btn"  onclick="javascript:query({{item.chapter}})" href="#"> »</a>
+
+						</td>
+
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+
 		</div>
-        {% endfor %}
+       <div class="col-md-4 column ">
+           <div id="sectionListDiv"></div>
+		</div>
 
 	</div>
 </div>
 <script type="text/javascript">
-var grade = {{grade}}
-var classes = {{classes}}
-function openWin(array){
-        var cards = array.join(",")
-        window.location.href = "{% url 'taskList' %}"+"?cards="+cards+"&g="+grade+"&c="+classes;
+var school = {{school}};
+var grade = {{grade}};
+var classes = {{classes}};
+var textbook = {{textbook}};
+var global=null;
+function query(chapter){
+    var reqData = {
+        'textbook':textbook,
+        'chapter':chapter
+    };
+    var htmlStr = ' <table class="table table-hover"><tbody>';
+
+    $.ajax({
+        type: 'GET',
+        url:   "/querySection/",
+        data:   reqData,
+        async:  false,
+        success: function(response){
+            global=response;
+             $.each(response.sectionList, function(i,item){
+            // i 为索引，item为遍历值
+                var section = item['section'];
+                var sectionName = item['sectionName']
+                htmlStr+="<tr><td>第"+section+"节 "+sectionName;
+                htmlStr+="<a class='btn'  onclick='javascript:openWin("+chapter+","+section+")' href='#'> »</a>"
+                htmlStr+="</td></tr>"
+            });
+        }
+    });
+
+    htmlStr=htmlStr+'</tbody></table>';
+
+    $('#sectionListDiv').html(htmlStr);
+
+   }
+
+function openWin(ch,se){
+        window.location.href = "{% url 'taskList' %}"+"?s="+school+"&g="+grade+"&c="+classes+"&t="+textbook+"&ch="+ch+"&se="+se;
     }
 </script>
 </body>

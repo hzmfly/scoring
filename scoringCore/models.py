@@ -78,7 +78,7 @@ class Student(models.Model):
     tms = models.DateTimeField(auto_now=True)
 
     def __str__(self):  # __unicode__ on Python 2
-        return str(self.id)+":"+self.studentName
+        return str(self.id)+":"+self.name
 
 class Teacher(models.Model):
     user = models.OneToOneField(User)
@@ -134,7 +134,7 @@ class Task(models.Model):
     school = models.IntegerField()
     tms = models.DateTimeField(auto_now=True)
     def __str__(self):  # __unicode__ on Python 2
-        return str(self.student.id)+":"+str(self.card.id)+":"+str(self.topic)
+        return str(self.student.id)+":"+str(self.topic.id)
     class Meta:
         unique_together = ("student",  "topic")
 
@@ -153,4 +153,6 @@ class ScoreRate(models.Model):
     classes = models.IntegerField()
     school = models.IntegerField()
     rate = models.FloatField()
+    def __str__(self):  # __unicode__ on Python 2
+        return str(self.topic)+":"+str(self.rate)
 
