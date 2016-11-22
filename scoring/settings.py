@@ -24,6 +24,37 @@ SECRET_KEY = '3w#l)d*x93f--&-4v^q7hf9x34zqalq(8!sf&^)haqfuc76ppt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+        }
+    }
+}
 
 ALLOWED_HOSTS = []
 
@@ -121,3 +152,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+LOGIN_URL = '/login/'

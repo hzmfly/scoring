@@ -152,7 +152,10 @@ class ScoreRate(models.Model):
     grade = models.IntegerField(choices=constant.GRADE_NAME)
     classes = models.IntegerField()
     school = models.IntegerField()
+    submitNum = models.IntegerField()
     rate = models.FloatField()
     def __str__(self):  # __unicode__ on Python 2
         return str(self.topic)+":"+str(self.rate)
+    class Meta:
+        unique_together = ("topic",  "grade", "school",  "classes")
 
