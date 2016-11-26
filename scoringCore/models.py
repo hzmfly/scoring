@@ -25,6 +25,9 @@ class Card(models.Model):
     def __str__(self):  # __unicode__ on Python 2
         return str(self.id)
 
+    class Meta:
+        unique_together = ("textbook", "chapter", "section")
+
 class Topic(models.Model):
     textbook = models.ForeignKey(
         'Textbook',
@@ -34,7 +37,7 @@ class Topic(models.Model):
     chapterName = models.CharField(max_length=45)
     section = models.IntegerField()
     sectionName = models.CharField(max_length=45)
-    topic = models.IntegerField()
+    topicNum = models.IntegerField()
     topicType = models.IntegerField(choices=constant.TOPIC_TYPE)
     degree = models.IntegerField()
     question = models.CharField(max_length=400, blank=True)
@@ -50,6 +53,7 @@ class Card_Topic(models.Model):
         'Card',
         on_delete=models.CASCADE,
     )
+    topicNum = models.IntegerField()
     topic = models.ForeignKey(
         'Topic',
         on_delete=models.CASCADE,
@@ -64,10 +68,10 @@ class Card_Topic(models.Model):
     tms = models.DateTimeField(auto_now=True)
 
     def __str__(self):  # __unicode__ on Python 2
-        return str(self.card.id)+"-"+str(self.topic.id)
+        return str(self.card.id)+"-"+str(self.topicNum)+":"+str(self.topic.id)
 
     class Meta:
-        unique_together = ("card", "topic")
+        unique_together = ("card", "topicNum")
 
 class Student(models.Model):
     name = models.CharField(max_length=30)

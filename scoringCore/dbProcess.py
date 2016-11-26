@@ -72,7 +72,7 @@ def sectionQueryByTextbookAndChapter(_textbook, _chapter):
 
 """ 按小节查询题目，按题号排序"""
 def topicQueryBySection(_textbook,_chapter,_section):
-    _obj = Topic.objects.filter(textbook=_textbook, chapter=_chapter, section=_section).order_by("topic")
+    _obj = Topic.objects.filter(textbook=_textbook, chapter=_chapter, section=_section).order_by("topicNum")
     if (_obj.exists()):
         return _obj
     else:

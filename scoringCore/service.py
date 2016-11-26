@@ -139,7 +139,7 @@ def getChapter_SectionsList(_textbook, _chapter):
             题目信息列表：
             [
                 {
-                    'topic':val,
+                    'topicNum':val,
                     'topicType':val,
                     'question':val,
                     'answer':val,
@@ -166,7 +166,7 @@ def getTopicListOrderByTopic(_textbook, _chapter, _section, _school, _grade, _cl
         for item in _topicList:
             _scoreRate = dbProcess.rateQueryByIdAndClasses(item.id, _school, _grade, _classes)
             tmp = {
-                'topic': item.topic,
+                'topicNum': item.topicNum,
                 'topicType': item.topicType,
                 'question': item.question,
                 'answer': item.answer,
@@ -194,7 +194,7 @@ def getTopicListOrderByRate(_textbook, _chapter, _section, _school, _grade, _cla
         for item in _scoreRateList:
             _topic = dbProcess.topicQueryById(item.id)
             tmp = {
-                'topic': _topic.topic,
+                'topicNum': _topic.topicNum,
                 'topicType': _topic.topicType,
                 'question': _topic.question,
                 'answer': _topic.answer,
