@@ -1,3 +1,6 @@
+#!/usr/bin/python
+#coding: UTF-8
+
 from scoringCore.models import Teacher
 from scoringCore.models import Teacher_Classes
 from scoringCore.models import Card
@@ -71,6 +74,14 @@ def studentsQueryByClasses(_grade,_classes):
         _result = Student.objects.filter(grade=_grade, classes=_classes).order_by("id")
     except ObjectDoesNotExist:
         logger.debug('there is no student queryed by grade %d,classes %d ', _grade,_classes)
+        return None
+    return _result
+
+def studentsQueryById(_id):
+    try:
+        _result = Student.objects.filter(id=_id).order_by("id")
+    except ObjectDoesNotExist:
+        logger.debug('there is no student queryed by id %d ', _id)
         return None
     return _result
 

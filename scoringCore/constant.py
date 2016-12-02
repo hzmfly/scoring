@@ -1,3 +1,6 @@
+#!/usr/bin/python
+#coding: UTF-8
+
 GRADE_NAME=(
         (1,'一年级'),
         (2, '二年级'),
