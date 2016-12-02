@@ -11,28 +11,32 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
 </head>
 <body>
-
+{% csrf_token %}
 <div class="container">
 	<div class="row clearfix">
         {% for teacher_class in teacher_classes %}
-		<div class="col-md-12 column">
-			<h2>
-                {{teacher_class.subjectCd_DESC}}
-			</h2>
+		<div class="col-md-4 column">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th style="background:#4c9ed9">
+							{{teacher_class.subjectCd_DESC}}
+						</th>
 
-			<div class="row clearfix">
-                {% for banji in teacher_class.banji %}
-				<div class="col-md-4 column row-background">
-					<h2>
-						{{banji.banji_DESC}}
-					</h2>
-					<p>
-                          <a class="btn"  onclick="javascript:openWin({{teacher_class.subjectCd}},{{banji.grade}},{{banji.classes}},{{banji.textbook}})" href="#">查看 »</a>
-					</p>
-				</div>
+					</tr>
+				</thead>
+				<tbody>
+				{% for banji in teacher_class.banji %}
+					<tr>
+						<td>
+							{{banji.banji_DESC}}    <a class="btn"  onclick="javascript:openWin({{banji.school}},{{banji.grade}},{{banji.classes}},{{banji.textbook}})" href="#">查看 »</a>
+						</td>
 
-                {% endfor %}
-			</div>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+
 		</div>
         {% endfor %}
 
@@ -45,3 +49,4 @@ function openWin(s,g,c,t){
 </script>
 </body>
 </html>
+

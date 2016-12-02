@@ -10,11 +10,114 @@
     <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/common.js' %}"></script>
-    <script src="{% static 'js/taskList.js' %}"></script>
 </head>
 <body>
-{% for item in cardsList %}
-{{item}}
-{% endfor %}
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="row clearfix">
+                <h1>{{banji_DESC}}</h1>
+				<div class="col-md-6 column">
+					<h3 class="text-left">
+                        第{{chapter}}章-第{{section}}节 {{sectionName}}
+					</h3>
+				</div>
+				<div class="col-md-6 column">
+                    <div class="btn-group">
+				        <button class="btn btn-default" type="button" onclick="query(0)">
+                            <em class="glyphicon glyphicon-align-center"></em>按题号</button>
+                        <button class="btn btn-default" type="button" onclick="query(1)">
+                            <em class="glyphicon glyphicon-align-right" ></em>按正确率</button>
+						</div>
+
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<br>
+<br>
+<div class="container">
+
+    {% for item in topicList %}
+	<div class="row clearfix">
+		<div class="col-md-6 column">
+			<dl class="dl-horizontal">
+
+                <dt>
+					{{item.topicNum}}
+				</dt>
+				<dd>
+					{{item.question}}
+				</dd>
+                {% ifequal item.topicType 1 %}
+				<dt>
+					A
+				</dt>
+				<dd>
+
+				</dd>
+				<dt>
+					B
+				</dt>
+				<dd>
+
+				</dd>
+				<dt>
+					C
+				</dt>
+				<dd>
+
+				</dd>
+				<dt>
+					D
+				</dt>
+				<dd>
+
+				</dd>
+                {% endifequal %}
+
+			</dl>
+		</div>
+		<div class="col-md-6 column">
+			<dl class="dl-horizontal">
+                {% ifnotequal item.rate -1 %}
+				<dt>
+					正确率
+				</dt>
+
+				<dd>
+					{{item.rate}}
+				</dd>
+                {% endifnotequal %}
+                <dt>
+					提交人数
+				</dt>
+				<dd>
+					{{item.submitNum}}
+				</dd>
+
+			</dl>
+		</div>
+	</div>
+
+    {% endfor%}
+</div>
+<script type="text/javascript">
+
+var school = {{school}};
+var grade = {{grade}};
+var classes = {{classes}};
+var textbook = {{textbook}};
+var ch ={{chapter}};
+var se={{section}};
+
+function query(order){
+     window.location.href = "{% url 'taskList' %}"+"?s="+school+"&g="+grade+"&c="+classes+"&t="+textbook+"&ch="+ch+"&se="+se+"&or="+order;
+}
+
+
+</script>
 </body>
 </html>

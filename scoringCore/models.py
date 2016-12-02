@@ -28,6 +28,9 @@ class Card(models.Model):
     def __str__(self):  # __unicode__ on Python 2
         return str(self.id)
 
+    class Meta:
+        unique_together = ("textbook", "chapter", "section")
+
 class Topic(models.Model):
     textbook = models.ForeignKey(
         'Textbook',
@@ -37,7 +40,7 @@ class Topic(models.Model):
     chapterName = models.CharField(max_length=45)
     section = models.IntegerField()
     sectionName = models.CharField(max_length=45)
-    topic = models.IntegerField()
+    topicNum = models.IntegerField()
     topicType = models.IntegerField(choices=constant.TOPIC_TYPE)
     degree = models.IntegerField()
     question = models.CharField(max_length=400, blank=True)
@@ -53,6 +56,7 @@ class Card_Topic(models.Model):
         'Card',
         on_delete=models.CASCADE,
     )
+    topicNum = models.IntegerField()
     topic = models.ForeignKey(
         'Topic',
         on_delete=models.CASCADE,
@@ -67,10 +71,10 @@ class Card_Topic(models.Model):
     tms = models.DateTimeField(auto_now=True)
 
     def __str__(self):  # __unicode__ on Python 2
-        return str(self.card.id)+"-"+str(self.topic.id)
+        return str(self.card.id)+"-"+str(self.topicNum)+":"+str(self.topic.id)
 
     class Meta:
-        unique_together = ("card", "topic")
+        unique_together = ("card", "topicNum")
 
 class Student(models.Model):
     name = models.CharField(max_length=30)
@@ -81,7 +85,7 @@ class Student(models.Model):
     tms = models.DateTimeField(auto_now=True)
 
     def __str__(self):  # __unicode__ on Python 2
-        return str(self.id)+":"+self.studentName
+        return str(self.id)+":"+self.name
 
 class Teacher(models.Model):
     user = models.OneToOneField(User)
@@ -137,7 +141,7 @@ class Task(models.Model):
     school = models.IntegerField()
     tms = models.DateTimeField(auto_now=True)
     def __str__(self):  # __unicode__ on Python 2
-        return str(self.student.id)+":"+str(self.card.id)+":"+str(self.topic)
+        return str(self.student.id)+":"+str(self.topic.id)
     class Meta:
         unique_together = ("student",  "topic")
 
@@ -155,5 +159,10 @@ class ScoreRate(models.Model):
     grade = models.IntegerField(choices=constant.GRADE_NAME)
     classes = models.IntegerField()
     school = models.IntegerField()
+    submitNum = models.IntegerField()
     rate = models.FloatField()
+    def __str__(self):  # __unicode__ on Python 2
+        return str(self.topic)+":"+str(self.rate)
+    class Meta:
+        unique_together = ("topic",  "grade", "school",  "classes")
 
