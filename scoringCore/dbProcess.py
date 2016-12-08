@@ -17,6 +17,19 @@ def insert2Teacher(_teacher):
         _teacher.save()
     except :
         return False
+
+def insertTask(_task):
+    try:
+        _task.save()
+    except:
+        return False;
+
+def insertScoreRate(_score_rate):
+    try:
+        _score_rate.save()
+    except:
+        return False
+
 def teacherQueryByUsername(_user):
     try:
         _obj = Teacher.objects.get(username=_user)  # 查询单个对象
@@ -98,5 +111,13 @@ def taskQueryByGradeAndClasses(_grade, _classes, _card, _topic):
         _result = Task.objects.filter(grade=_grade, classes=_classes, card=_card, topic=_topic).order_by("id")
     except ObjectDoesNotExist:
         logger.debug('there is no task queryed by grade %d,classes %d ,card %d,topic %d', _grade, _classes,_card,_topic)
+        return None
+    return _result
+
+def scoreRateQueryByTopic(_topic):
+    try:
+        _result = ScoreRate.objects.filter(topic=_topic)
+    except ObjectDoesNotExist:
+        logger.debug('there is no scoreRate queryed by topic %d', _topic)
         return None
     return _result

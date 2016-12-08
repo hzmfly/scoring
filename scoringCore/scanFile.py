@@ -17,7 +17,7 @@ def scan_dir(_thread_name, _dir, _delay):
 			_file = os.path.join(_dir, _file)
 			if os.path.isfile(_file):
 				print _file
-				if _file in _visit_files and _file.contains(".jpg"): # to do
+				if _file in _visit_files and _file.find(".jpg") != -1:
 					_visit_files.append(_file)
 					scan_one_card(_file)
 		time.sleep(_delay)
@@ -29,7 +29,7 @@ def scan_one_card(_path):
 		_student = dbProcess.studentsQueryById(_student_no)
 		_topic = dbProcess.topicQueryByCardAndTopic(_card_no, _topic_no)
 		_score = _scores(_topic_no)
-		if _score is not integer: # to do
+		if type(_score) == int:
 			if _score == _topic.answer:
 				_score = _topic.point
 			else:
