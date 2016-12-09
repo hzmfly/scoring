@@ -1,0 +1,115 @@
+﻿.dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    margin-top: -100px;
+    margin-left: -165px;
+    background-color: white;
+    z-index: 1000;
+    display: none;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+.dialog-header {
+    font-size: 12px;
+    border-bottom: 1px solid #cfcfcf;
+    padding: 5px 0px 5px 20px;
+    background-color: #F0F0F0;
+    border-top-left-radius: 5px;
+    -moz-border-top-left-radius: 5px;
+    -ms-border-top-left-radius: 5px;
+    -webkit-border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    -moz-border-top-right-radius: 5px;
+    -ms-border-top-right-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+}
+
+.dialog-body {
+    position: relative;
+    padding: 20px 20px;
+    overflow: auto;
+    min-height: 60px;
+}
+
+    .dialog-body p.content {
+        word-break: break-all;
+        margin-left: 60px;
+        margin-top: 5px;
+    }
+
+.dialog-footer {
+    background-color: #F0F0F0;
+    padding: 7px 0px 8px 20px;
+    border-bottom-left-radius: 5px;
+    -moz-border-bottom-left-radius: 5px;
+    -ms-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    -moz-border-bottom-right-radius: 5px;
+    -ms-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    height: 22px;
+}
+
+.btn-dialog {
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    padding: 0px 10px;
+    text-align: center;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border: 1px solid #D1D1D1;
+    float: right;
+}
+
+.dialog-close {
+    display: inline-block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: url(../images/ltclose.png) no-repeat center center;
+    top: 8px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.dialogbg {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: none;
+    filter: alpha(opacity=40);
+    -moz-opacity: 0.4;
+    -khtml-opacity: 0.4;
+    opacity: 0.4;
+    background-color: black;
+}
+
+.warnicon {
+    background:  url(../images/warnicon.png) no-repeat center center;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 25px;
+    left: 50px;
+}
+
+.dialog-title {
+    font-weight: 400;
+}

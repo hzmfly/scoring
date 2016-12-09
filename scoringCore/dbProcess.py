@@ -6,6 +6,7 @@ from scoringCore.models import Student
 from scoringCore.models import Task
 from scoringCore.models import Topic
 from scoringCore.models import ScoreRate
+from scoringCore.models import Textbook_Section
 from django.core.exceptions import ObjectDoesNotExist
 import logging
 
@@ -51,8 +52,7 @@ def insertTeacher_Classes(param):
 
 """ 按教辅查询章节列表"""
 def chapterQueryByTextbook(_textbook):
-
-    _obj = Topic.objects.filter(textbook=_textbook).order_by("chapter")
+    _obj = Textbook_Section.objects.filter(textbook=_textbook).order_by("chapter")
     if(_obj.exists()):
         return _obj
     else:
@@ -69,6 +69,16 @@ def sectionQueryByTextbookAndChapter(_textbook, _chapter):
         logger.error('there is no section queryed by textbook %s chapter %s ', _textbook, _chapter)
         return None
 
+"""
+"""
+
+def topicCountQuery(_textbook,_chapter,_section):
+    try:
+        _obj = Textbook_Section.objects.get(textbook=_textbook, chapter=_chapter, section=_section)
+    except ObjectDoesNotExist:
+        logger.error('there is no item queryed by textbook %s,chapter %s ,section %s', _textbook, _chapter, _section)
+        return None
+    return _obj
 
 """ 按小节查询题目，按题号排序"""
 def topicQueryBySection(_textbook,_chapter,_section):

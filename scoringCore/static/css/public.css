@@ -1,0 +1,91 @@
+﻿@charset "utf-8";
+/* CSS Document */
+body{font-family:"Times New Roman","微软雅黑",Arial, Helvetica, sans-serif!important; font-size: 14px;font-style: normal; line-height: 22px;
+ font-weight: normal; font-variant: normal; color:#505050; overflow:auto; background:#eee; min-height:100%; position:relative;}
+body,ul,dl,dd,dt,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,img,td,div,input{margin:0;padding:0;}
+table{ border-collapse:collapse; border-spacing:0;}
+a{ outline-style:none; color:#4b4b4b; text-decoration:none; border:0px;}
+a:hover{ text-decoration:none; color:#02b4b6;}
+input,select,textarea{font-size:12px; font-family:Arial, Helvetica, sans-serif; color:#333}
+img{border:0;}
+input{ outline:none; border:0px; background:none;}
+li{list-style-type:none; vertical-align:0}
+.hidden{display:none;}
+.fleft{float:left}
+.fright{float:right}
+.fleft_impt{ float:left!important;}
+.pr{ position:relative;}
+.pa{ position:absolute}
+.clear{ clear:both; height:0; line-height:0; overflow:hidden; font-size:0;}
+textarea{resize: none;}
+.f12{ font-size:12px;}
+.f14{ font-size:14px;}
+.f16{ font-size:16px;}
+.f18{ font-size:18px;}
+.f22{ font-size:22px;}
+.f24{ font-size:24px;}
+.fbold{ font-weight:700}
+.slans{ color:#022c49;}
+.cls{ color:#3dcac2}
+.red{ color:#cc0000;}
+.fred{ color:#f45d59;}
+.slans1{ color:#1b516a}
+.mar0{ margin:0px!important;}
+.marb4{-moz-border-radius:13px; -webkit-border-radius:13px; border-radius:13px;behavior:url(css/pie.htc);}
+.marb5{-moz-border-radius:50%; -webkit-border-radius:50%; border-radius:50%;behavior:url(css/pie.htc);}
+.w1002{ width:1000px; margin:0 auto;}
+.w800{ width:800px; margin:0 auto;}
+.hide{ display:none;}
+/****/
+.logind{position:relative; height:100%;margin-top:0px;}
+/**头部**/
+.head{ border-top:3px solid #3dcac2; height:40px;position:fixed;top:0px;width:1002px;z-index:999; padding:5px 0px; background:#fff;box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5); -moz-box-shadow:0 0 2px 0 rgba(0, 0, 0, 0.5); -ms-box-shadow:0 0 2px 0 rgba(0, 0, 0, 0.5); -webkit-box-shadow:0 0 2px 0 rgba(0, 0, 0, 0.5);}
+.logo{ height:40px; background:url(../images/logo2.png) no-repeat center center; width:117px; float:left; margin-left:20px;}
+.flooerd{ text-align:center; width:1002px; position:absolute; left:50%; margin-left:-501px; bottom:0px; line-height:40px; text-align:center;}
+/**面包屑**/
+.mbxbav{ margin-top:20px;}
+.mbxbav a{ float:left; line-height:23px; font-size:14px; color:#3dcac2;}
+.mbxbav a span{ float:left; height:23px;}
+.mbxbav a .span1{ background:url(../images/mbx3.png) no-repeat left center; width:12px; height:23px;}
+.mbxbav a .span2{ background:#fff; padding:0 5px;}
+.mbxbav a .span3{ background:url(../images/mbx3.png) no-repeat right center; width:12px;}
+.mbxbav a:hover{ color:#fff;}
+.mbxbav a:hover .span1{ background:url(../images/mbx2.png) no-repeat left center; width:12px; height:23px;}
+.mbxbav a:hover .span2{ background:#3dcac2; padding:0 5px;}
+.mbxbav a:hover .span3{ background:url(../images/mbx2.png) no-repeat right center; width:12px;}
+.mbxbav a.choused{ color:#fff;}
+.mbxbav a.choused .span1{ background:url(../images/mbx2.png) no-repeat left center; width:12px; height:23px;}
+.mbxbav a.choused .span2{ background:#3dcac2; padding:0 5px;}
+.mbxbav a.choused .span3{ background:url(../images/mbx2.png) no-repeat right center; width:12px;}
+
+
+.alertMessage {
+    background:#000;
+    filter:alpha(opacity=70);
+    -moz-opacity:0.7;
+    opacity:0.7;
+    width:200px;
+    text-align:center;
+    border-radius:5px; -moz-border-radius:5px; -ms-border-radius:5px; -o-border-radius:5px; -webkit-border-radius:5px;
+    z-index:1002;
+    position:fixed;
+    top:45%;
+    left:50%;
+    margin-left:-100px;
+    font-size:15px;
+    color:#fff;
+    padding:10px;
+}
+
+.loading {
+    text-align:center;
+    font-size:16px;
+    line-height:35px;
+}
+.loading img {
+    vertical-align:middle;
+    padding-right:10px;
+    width:35px;
+    height:35px;
+}
+.nodata { width:100%; text-align:center;font-size:16px; line-height:50px;margin-top:50px;color:#aeaeae}

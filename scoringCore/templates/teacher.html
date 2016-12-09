@@ -1,0 +1,126 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style="min-height: 383px;"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>个人主页</title>
+     <link href="{% static 'css/public.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/llkt2016060618.css' %}" rel="stylesheet">
+     <link href="{% static 'css/zTreeStyle.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dialog.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dialog.css' %}" rel="stylesheet">
+    <style type="text/css">
+        .queslist img {
+            vertical-align: middle;
+        }
+    </style>
+
+    <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/teacher.js' %}"></script>
+    <script src="{% static 'js/zTree.js' %}"></script>
+</head>
+<body style="min-height: 383px;">
+
+
+<div class="navigator">
+    <div>
+
+        <div class="menuItem right noh">
+            <div class="profile">
+                <div class="userName"><span title="测试老赵">测试老赵</span><div class="spliter"></div>
+                </div>
+                <div class="exit" ><span>退出</span></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="w1002 pr">
+        <div id="JiaoxFuQuestion" style="">
+            <table class="jffilter" cellspacing="0" cellpadding="0">
+                <tbody><tr class="filter_item">
+                    <th>学科</th>
+                    <td>
+                        <ul class="xueke"></ul>
+                    </td>
+                </tr>
+                <tr class="filter_item">
+                    <th>班级</th>
+                    <td>
+                        <ul class="banji"></ul>
+                    </td>
+                </tr>
+                <tr class="filter_item">
+                    <th>教辅</th>
+                    <td>
+                        <ul class="jiaofu"></ul>
+                    </td>
+                </tr>
+            </tbody></table>
+
+    <div class="leftnavd">
+
+        <ul id="tree" class="lenvad ztree" style="-moz-user-select: none;">
+
+        </ul>
+    </div>
+    <div class="rdbfd">
+                <!--右侧顶部-->
+                <div class="rid_top">
+                    <h2><span>当前 &gt;</span><span class="currSectionName"></span></h2>
+                    <div class="quesnum">共<span id="I_num1">0</span>道</div>
+
+                </div>
+                <div id="statistics" class="papersx ">
+                    <div class="topic psx">
+                        <span>题号：</span>
+                        <ul>
+
+
+                        </ul>
+
+                        <div class="clear"></div>
+                    </div>
+                    <div class="scorate psx">
+                        <span>得分：</span>
+                        <ul>
+
+                        </ul>
+
+                        <div class="clear"></div>
+                    </div>
+                </div>
+
+                <!--列表-->
+                <div class="questionLst hidden">
+                    <ul id="topiclist" >
+                        <li class="questionli">
+                            <div class="qustion">
+
+                                <div class="qcont"><span class="qustionno">1、</span>⊙O的半径为R，点P到圆心O的距离为d，并且d ≥ R，则P点<div class="distable"><div class="distr"><div class="distdcode">A. </div><div class="distdcontent">在⊙O内或圆周上</div></div><div class="distr"><div class="distdcode">B. </div><div class="distdcontent">在⊙O外</div></div><div class="distr"><div class="distdcode">C. </div><div class="distdcontent">在圆周上</div></div><div class="distr"><div class="distdcode">D. </div><div class="distdcontent">在⊙O外或圆周上</div></div></div><div style="clear:both;"></div></div>
+                            </div>
+                            <div class="act">
+                                <div class="rightAnswer hidden">D</div>
+                                <div class="answerExplain hidden"><br>试题分析：因为⊙O的半径为R，点P到圆心O的距离为d，所以当d＞R时, P点在⊙O外，当d=R时, P点在圆周上，所以d ≥ R，时P点在⊙O外或圆周上，故选：D.<br>考点：点与圆的位置关系.</div>
+                                <span class="showanalyse" onclick="getAnswerExplain(this)" style="">查看解析</span>
+                                <span class="select " rel="14266345" questiontype="0"></span><span class="baocuo hidden" rel="14266345">报错</span>
+                                <div style="clear: both"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+
+                    <div id="nodata" style="margin-left:300px">
+                        <img src="{% static 'css/img/nodata.png' %}" /><br />
+                        暂无题目
+                    </div>
+
+    </div>
+</div>
+
+<link href="{% static 'css/jquery.css' %}" rel="stylesheet">
+</body></html>
