@@ -14,21 +14,6 @@ class Textbook(models.Model):
     def __str__(self):  # __unicode__ on Python 2
         return str(self.id)+":"+str(self.textbookName)
 
-class Textbook_Section(models.Model):
-    textbook = models.ForeignKey(
-        'Textbook',
-        on_delete=models.CASCADE,
-    )
-    chapter = models.IntegerField()
-    chapterName = models.CharField(max_length=45)
-    section = models.IntegerField()
-    sectionName = models.CharField(max_length=45)
-    topicCount = models.IntegerField()
-    def __str__(self):  # __unicode__ on Python 2
-        return str(self.textbook.id)+':'+str(self.chapter)+':'+str(self.section)
-    class Meta:
-        unique_together = ("textbook", "chapter", "section")
-
 class Card(models.Model):
     textbook = models.ForeignKey(
         'Textbook',
@@ -40,7 +25,8 @@ class Card(models.Model):
     def __str__(self):  # __unicode__ on Python 2
         return str(self.id)
 
-
+    class Meta:
+        unique_together = ("textbook", "chapter", "section")
 
 class Topic(models.Model):
     textbook = models.ForeignKey(
@@ -127,7 +113,7 @@ class Teacher_Classes(models.Model):
         return str(self.teacher.id)+":"+str(self.grade)+"-"+str(self.classes)
 
     class Meta:
-        unique_together = ("teacher", "school","grade", "classes","textbook")
+        unique_together = ("teacher", "grade", "classes")
 
 
 class Task(models.Model):
