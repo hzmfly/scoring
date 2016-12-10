@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 import os
 import sys
+import thread
+
+from scoringCore import scanFile
+
+scaner_dir = "/Users/jiangjiawei/Dropbox/code/github/tf_weights/similar"
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scoring.settings")
@@ -19,4 +24,5 @@ if __name__ == "__main__":
                 "forget to activate a virtual environment?"
             )
         raise
+    thread.start_new_thread(scanFile.scan_dir, ("ScanFile", scaner_dir, 5000))
     execute_from_command_line(sys.argv)

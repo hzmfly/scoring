@@ -1,3 +1,6 @@
+#!/usr/bin/python
+#coding: UTF-8
+
 from scoringCore import dbProcess
 from scoringCore import constant
 import logging

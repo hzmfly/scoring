@@ -1,20 +1,33 @@
+#!/usr/bin/python
+#coding: UTF-8
+
 from scoringCore.models import Teacher
 from scoringCore.models import Teacher_Classes
 from scoringCore.models import Card
 from scoringCore.models import Card_Topic
 from scoringCore.models import Student
 from scoringCore.models import Task
-from scoringCore.models import Topic
-from scoringCore.models import ScoreRate
 from django.core.exceptions import ObjectDoesNotExist
 import logging
 
-logger = logging.getLogger('django')
+logger = logging.getLogger(__name__)
 
 def insert2Teacher(_teacher):
     try:
         _teacher.save()
     except :
+        return False
+
+def insertTask(_task):
+    try:
+        _task.save()
+    except:
+        return False;
+
+def insertScoreRate(_score_rate):
+    try:
+        _score_rate.save()
+    except:
         return False
 
 def teacherQueryByUsername(_user):
@@ -26,18 +39,17 @@ def teacherQueryByUsername(_user):
 
 
 def classesQueryByTeacher(_teacher):
-
-    _obj = Teacher_Classes.objects.filter(teacher=_teacher).order_by("subjectCd") #查询多个对象
-    if (_obj.exists()):
-        return _obj
-    else:
+    try:
+        _obj = Teacher_Classes.objects.filter(teacher=_teacher).order_by("subjectCd") #查询多个对象
+    except ObjectDoesNotExist:
         return None
+    return _obj
 
 def insertTeacher_Classes(param):
     try:
         _teacher = Teacher.objects.get(teacher=param['teacher'])
     except ObjectDoesNotExist:
-        logger.error('teacher id dose not exist when insert into Teacher_Clsses')
+        logger.debug('teacher id dose not exist when insert into Teacher_Clsses')
         return False
     #try:
     _obj = Teacher_Classes(_teacher, grade=param['grade'],
@@ -46,72 +58,66 @@ def insertTeacher_Classes(param):
     _obj.save()
     #except
 
-
-
-
-""" 按教辅查询章节列表"""
 def chapterQueryByTextbook(_textbook):
-
-    _obj = Topic.objects.filter(textbook=_textbook).order_by("chapter")
-    if(_obj.exists()):
-        return _obj
-    else:
-        logger.error('there is no chapter queryed by textbook %s', _textbook)
-        return None
-
-""" 按教辅和章节查询小节列表"""
-def sectionQueryByTextbookAndChapter(_textbook, _chapter):
-
-    _obj = Topic.objects.filter(textbook=_textbook, chapter=_chapter).order_by("section")
-    if (_obj.exists()):
-        return _obj
-    else:
-        logger.error('there is no section queryed by textbook %s chapter %s ', _textbook, _chapter)
-        return None
-
-
-""" 按小节查询题目，按题号排序"""
-def topicQueryBySection(_textbook,_chapter,_section):
-    _obj = Topic.objects.filter(textbook=_textbook, chapter=_chapter, section=_section).order_by("topicNum")
-    if (_obj.exists()):
-        return _obj
-    else:
-        logger.error('there is no topic queryed by textbook %s,chapter %s ,section %s', _textbook, _chapter, _section)
-        return None
-
-
-""" 获取某班 某题的得分率，记录唯一或不存在"""
-def rateQueryByIdAndClasses(_topicId, _school, _grade, _classes):
     try:
-        _result = ScoreRate.objects.get(topic=_topicId, school=_school, grade=_grade, classes=_classes)
+        _chapterList = Card.objects.filter(textbook=_textbook).order_by("chapter")
     except ObjectDoesNotExist:
-        logger.info('there is no rate queryed by topic %s,school %s,grade %s ,classes %s', _topicId, _school, _grade, _classes)
+        logger.debug('there is no chapter queryed by textbook %d', _textbook)
+        return None
+    return _chapterList
+
+def cardQueryByChapter(_textbook,_chapter):
+    try:
+        _cardsList = Card.objects.filter(textbook=_textbook,chapter=_chapter).order_by("id")
+    except ObjectDoesNotExist:
+        logger.debug('there is no cards queryed by textbook %d chapter %d', _textbook,_chapter)
+        return None
+    return _cardsList
+
+def topicQueryByCard(_card):
+    try:
+        _topicList = Card.objects.filter(card=_card).order_by("topic")
+    except ObjectDoesNotExist:
+        logger.debug('there is no topic queryed by card %d ', _card)
+        return None
+    return _topicList
+
+def studentsQueryByClasses(_grade,_classes):
+    try:
+        _result = Student.objects.filter(grade=_grade, classes=_classes).order_by("id")
+    except ObjectDoesNotExist:
+        logger.debug('there is no student queryed by grade %d,classes %d ', _grade,_classes)
         return None
     return _result
 
-""" 按班级和小节查询得分率，按得分率降序排序"""
-def rateQueryBySectionAndClasses(_textbook, _chapter, _section, _school, _grade, _classes):
-    _obj = ScoreRate.objects.filter(textbook=_textbook, chapter=_chapter, section=_section, school=_school, grade=_grade, classes=_classes).order_by("-rate")
-    if (_obj.exists()):
-        return _obj
-    else:
-        return None
-
-
-""" 按题号查题目"""
-def topicQueryById(_topicId):
+def studentsQueryById(_id):
     try:
-        _result = Topic.objects.get(id=_topicId)
+        _result = Student.objects.filter(id=_id).order_by("id")
     except ObjectDoesNotExist:
-        logger.error('there is no topic queryed by topic id %s', _topicId)
+        logger.debug('there is no student queryed by id %d ', _id)
         return None
     return _result
 
-""" 按班级查询学生列表"""
-def studentQueryByClasses(_school, _grade, _classes):
-    _obj = Student.objects.filter( school=_school, grade=_grade, classes=_classes)
-    if (_obj.exists()):
-        return _obj
-    else:
-        logger.error('there is no student queryed by grade %s,classes %s ', _grade, _classes)
+def topicQueryByCardAndTopic(_card, _topic):
+    try:
+        _result = Card_Topic.objects.filter(card=_card, topic=_topic)
+    except ObjectDoesNotExist:
+        logger.debug('there is no topic queryed by card %d, topic %d ', _card, _topic)
         return None
+    return _result
+
+def taskQueryByGradeAndClasses(_grade, _classes, _card, _topic):
+    try:
+        _result = Task.objects.filter(grade=_grade, classes=_classes, card=_card, topic=_topic).order_by("id")
+    except ObjectDoesNotExist:
+        logger.debug('there is no task queryed by grade %d,classes %d ,card %d,topic %d', _grade, _classes,_card,_topic)
+        return None
+    return _result
+
+def scoreRateQueryByTopic(_topic):
+    try:
+        _result = ScoreRate.objects.filter(topic=_topic)
+    except ObjectDoesNotExist:
+        logger.debug('there is no scoreRate queryed by topic %d', _topic)
+        return None
+    return _result
