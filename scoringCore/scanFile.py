@@ -5,7 +5,7 @@ import time
 import os
 import logging
 import dbProcess
-from scoringCore.models.import Task
+from scoringCore.models import Task
 
 logger = logging.getLogger(__name__)
 
