@@ -4,9 +4,11 @@
 from scoringCore.models import Teacher
 from scoringCore.models import Teacher_Classes
 from scoringCore.models import Card
+from scoringCore.models import Topic
 from scoringCore.models import Card_Topic
 from scoringCore.models import Student
 from scoringCore.models import Task
+from scoringCore.models import ScoreRate
 from django.core.exceptions import ObjectDoesNotExist
 import logging
 
@@ -98,9 +100,17 @@ def studentsQueryById(_id):
         return None
     return _result
 
+def topicQueryById(_id):
+    try:
+        _result = Topic.objects.filter(id=_id)
+    except ObjectDoesNotExist:
+        logger.debug('there is no topic queryed by id %d ', _id)
+        return None
+    return _result
+
 def topicQueryByCardAndTopic(_card, _topic):
     try:
-        _result = Card_Topic.objects.filter(card=_card, topic=_topic)
+        _result = Card_Topic.objects.filter(card_id=_card, topic_id=_topic)
     except ObjectDoesNotExist:
         logger.debug('there is no topic queryed by card %d, topic %d ', _card, _topic)
         return None
