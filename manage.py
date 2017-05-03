@@ -23,5 +23,5 @@ if __name__ == "__main__":
             )
         raise
     from scoringCore import scanFile
-    thread.start_new_thread(scanFile.scan_dir, ("ScanFile", scaner_dir, 2))
+    _thread.start_new_thread(scanFile.scan_dir, ("ScanFile", scaner_dir, 2))
     execute_from_command_line(sys.argv)
