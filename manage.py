@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
-import thread
+import _thread
 
 scaner_dir = "testFile/"
 
