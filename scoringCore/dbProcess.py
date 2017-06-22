@@ -32,6 +32,13 @@ def insertScoreRate(_score_rate):
     except:
         return False
 
+def updateScoreRate(_id, _submitNum, _rate):
+    try:
+        ScoreRate.objects.filter(id=_id).update(submitNum = _submitNum)
+        ScoreRate.objects.filter(id=_id).update(rate = _rate)
+    except:
+        return False
+
 def teacherQueryByUsername(_user):
     try:
         _obj = Teacher.objects.get(username=_user)  # 查询单个对象

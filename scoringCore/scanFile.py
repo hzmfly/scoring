@@ -4,68 +4,94 @@
 import time
 import os
 import logging
+import threading
+import numpy as np
+import random
+from AnswerSheetRecognition import *
+
+import shutil
 
 logger = logging.getLogger(__name__)
 
-def scan_dir(_thread_name, _dir, _delay):
-	print("start scan dir: " + _dir)
-	time.sleep(_delay)
-	_visit_files = []
-	while True:
-		_cur_files = os.listdir(_dir)
-		for _file in _cur_files:
-			_file = os.path.join(_dir, _file)
-			if os.path.isfile(_file):
-				if _file not in _visit_files and _file.find(".jpg") != -1:
-					print("find file: " + _file)
-					_visit_files.append(_file)
-					scan_one_card(_file)
-		time.sleep(_delay)
+def scan_dir(thread_name, dir, delay):
+    print("start scan dir: " + dir)
+    delay = random.randint(delay, delay+3)
+    time.sleep(delay)
+    flag = True
+    flag_file = os.path.join(dir, "flag.txt")
+    if os.path.isfile(flag_file) == True:
+        flag = False
+    else:
+        f = open(flag_file, "w")
+        f.write("flag\n")
+        f.close()
+    visit_files = []
+    while flag:
+        cur_files = os.listdir(dir)
+        print(cur_files)
+        for file in cur_files:
+            abs_file = os.path.join(dir, file)
+            if os.path.isfile(abs_file):
+                if abs_file not in visit_files and abs_file.find(".jpg") != -1:
+                    print("find file: " + abs_file)
+                    visit_files.append(abs_file)
+                    scan_one_card(abs_file)
+                    shutil.move(abs_file, os.path.join(os.path.join(dir,"visited"), file))
+        time.sleep(delay)
+        if os.path.isfile(flag_file) == True:
+        	os.remove(flag_file)
 
-def scan_one_card(_path):
-	print("scan one card: " + _path)
+def scan_one_card(path):
+	print("scan one card: " + path)
 	from scoringCore import dbProcess
 	from scoringCore.models import Task
-	_file = open(_path)
-	(_student_no, _card_no, _scores) = get_card_info(_file)
-	for _topic_no in range(0,len(_scores)):
-		_student = dbProcess.studentsQueryById(_student_no)
-		_card_topic = dbProcess.topicQueryByCardAndTopic(_card_no, _topic_no+1)
-		_topic_id = _card_topic[0].id
-		_topic = dbProcess.topicQueryById(_topic_id)
-		_score = _scores[_topic_no]
-		print("student id: " + str(_student_no) + ", card id: " + str(_card_no) + ", topic: " + str(_card_topic[0]))
-		if type(_score) != int:
-			#print "score: " + str(_score) + ", answer: " + str(_topic[0].answer)
-			if _score == _topic[0].answer:
-				_score = _topic[0].point
+	(student_no, card_no, scores) = get_card_info(path)
+	for topic_no in range(0,len(scores)):
+		student = dbProcess.studentsQueryById(student_no)
+		cardtopic = dbProcess.topicQueryByCardAndTopic(card_no, topic_no + 1)
+		topic_id = cardtopic[0].id
+		topic = dbProcess.topicQueryById(topic_id)
+		score = scores[topic_no]
+		print("student id: " + str(student_no) + ", card id: " + str(card_no) + ", topic: " + str(cardtopic[0]))
+		if type(score) != int:
+			#print "score: " + str(score) + ", answer: " + str(topic[0].answer)
+			if score == topic[0].answer:
+				score = topic[0].point
 			else:
-				_score = 0
-		print("true score: " + str(_score))
-		_task_obj = Task(student_id=_student[0].id, topic_id=_topic[0].id,
-			answer=_topic[0].answer, score=_score, textbook_id=_topic[0].textbook_id, 
-			chapter=_topic[0].chapter, section=_topic[0].section,
-			grade=_student[0].grade, classes=_student[0].classes, school=_student[0].school)
+				score = 0
+		print("true score: " + str(score))
+		task_obj = Task(student_id=student[0].id, topic_id=topic[0].id,
+			answer=topic[0].answer, score=score, textbook_id=topic[0].textbook_id, 
+			chapter=topic[0].chapter, section=topic[0].section,
+			grade=student[0].grade, classes=student[0].classes, school=student[0].school)
 		
-		dbProcess.insertTask(_task_obj)
+		dbProcess.insertTask(task_obj)
 
-		_score_rate = dbProcess.scoreRateQueryByTopic(_topic[0].id)
-		#print "score rate: " + str(_score_rate[0])
-		cur_num = _score_rate[0].submitNum
-		cur_rate = _score_rate[0].rate
-		_total_score = cur_num * cur_rate * _topic[0].point
-		print("current num: " + str(cur_num) + ", cur rate: " + str(cur_rate) + ", total score: " + str(_total_score))
-		_score_rate[0].submitNum = cur_num + 1
-		print("update num: " + str(_score_rate[0].submitNum))
-		_score_rate[0].rate = (_total_score + _score) / (cur_num + 1)
-		print("update score rate: " + str(_score_rate[0].rate))
-		# dbProcess.insertScoreRate(_score_rate)
+		score_rate = dbProcess.scoreRateQueryByTopic(topic[0].id)
+		#print "score rate: " + str(score_rate[0])
+		cur_num = score_rate[0].submitNum
+		cur_rate = score_rate[0].rate
+		totalscore = cur_num * cur_rate * topic[0].point
+		print("current num: " + str(cur_num) + ", cur rate: " + str(cur_rate) + ", total score: " + str(totalscore))
+		cur_num = cur_num + 1
+		print("update num: " + str(cur_num))
+		cur_rate = (totalscore + score) / cur_num / topic[0].point
+		print("update score rate: " + str(cur_rate))
+		dbProcess.updateScoreRate(score_rate[0].id, cur_num, cur_rate)
 
 		
 def get_card_info(_file):
-	_student_no = 2
-	_card_no = 1
-	_scores = ["A", "B", "A", 10, 10]
-	return (_student_no, _card_no, _scores)
-
-
+	info = XDDetection(str(_file))
+	student_no = info.studentNo
+	print("student no: " + str(student_no))
+	student_no = 2
+	card_no = info.cardNo
+	print("card no: " + str(card_no))
+	card_no = card_no[6:]
+	img = np.asarray(info.studentNameImg)
+	scores = []
+	for i in range(0, len(info.topics)):
+		scores.append(info.topics[i].topicScore)
+	print(scores)
+	scores = ["A", "B", "A", 10, 10]
+	return (student_no, int(card_no), scores)
