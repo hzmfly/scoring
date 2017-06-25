@@ -50,7 +50,7 @@ def scan_one_card(path):
 	student = dbProcess.studentsQueryById(student_no)
 	if len(student) == 0:
 		print("exist no student: " + str(student_no))
-		continue
+		return
 	for i in range(0,len(scores)):
 		topic_no = topic_nos[i]
 		cardtopic = dbProcess.topicQueryByCardAndTopic(card_no, topic_no)
