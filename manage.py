@@ -6,7 +6,7 @@ import _thread
 import threading
 import logging
 
-scaner_dir = "F:\\my-data\\Dropbox\\code\\github\\scoring\\testFile"
+scaner_dir = "testFile/"
 
 if __name__ == "__main__":
 

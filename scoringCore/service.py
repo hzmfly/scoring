@@ -1,6 +1,3 @@
-#!/usr/bin/python
-#coding: UTF-8
-
 from scoringCore import dbProcess
 from scoringCore import constant
 import logging
@@ -16,11 +13,15 @@ logger = logging.getLogger('django')
                     'subjectCd_DESC':desc
                     'banji':[
                                 {
-                                    'banji_DESC':desc
+                                    'banji_DESC':desc,
                                     'school':val,
                                     'grade':val
                                     'classes':val
-                                    'textbook':val
+                                    'textbook':
+                                        [
+                                            'textbookId':val,
+                                            'textbookName':val
+                                        ]
                                 },
                                 ...
 
@@ -31,47 +32,100 @@ logger = logging.getLogger('django')
 
 '''
 def getTeacher_ClassesList(teacher):
-    _teacher_classes = dbProcess.classesQueryByTeacher(teacher)
-    _result_list = []
-    if _teacher_classes is not None:
-        i = 0
-        subjectCd = _teacher_classes[0].subjectCd
-        json = {
-            'subjectCd': _teacher_classes[0].subjectCd,
-            'subjectCd_DESC': _teacher_classes[0].get_subjectCd_display(),
-            'banji': []
-        }
-        _result_list.append(json)
-        for item in _teacher_classes:
-            if item.subjectCd == subjectCd:
-                _result_list[i]['banji'].append({
-                    'banji_DESC':item.get_grade_display() + str(item.classes) + "班",
-                    'school':item.school,
-                    'grade': item.grade,
-                    'classes': item.classes,
-                    'textbook': item.textbook.id,
+    _result_list=[]
+    _teacher_classesQuerySet = dbProcess.classesQueryByTeacher(teacher)
+    if _teacher_classesQuerySet is None:
+        logger.error(teacher.name + ' have no classes')
+        return None
+
+    _subjectCdList=distinct(_teacher_classesQuerySet,"subjectCd")
+    print(_subjectCdList)
+    i = 0
+    for item in _subjectCdList:
+        _result_list.append({
+            'subjectCd':item.subjectCd,
+            'subjectCd_DESC':item.get_subjectCd_display(),
+            'banji':[]
+        })
+
+
+        #选中科目后，按班级去重，school,grade,classes
+        _banjiQuerySet = _teacher_classesQuerySet.filter(subjectCd=item.subjectCd)
+        banjiList=[]
+        for item2 in _banjiQuerySet:
+            banji = str(item2.school)+'-'+str(item2.grade)+'-'+str(item2.classes)
+            if banji not in banjiList:
+                banjiList.append(banji)
+        for banji in banjiList:
+            arr =banji.split("-")
+            _school = arr[0]
+            _grade = arr[1]
+            _classes = arr[2]
+            #选中班级后，找出所有的教辅，教辅不应该重复，直接遍历取值
+            _textbookQuerySet = _banjiQuerySet.filter(school=_school,grade=_grade,classes=_classes)
+            textbookList=[]
+            for item3 in _textbookQuerySet:
+                textbookList.append({'textbookId': item3.textbook.id,
+                                     'textbookName': item3.textbook.textbookName
+                                     })
+            _result_list[i]['banji'].append({
+                                    'banji_DESC':str(constant.GRADE_NAME[int(_grade) - 1][1]) + str(
+                                                 _classes) + "班",
+                                    'school':_school,
+                                    'grade': _grade,
+                                    'classes': _classes,
+                                    'textbook': textbookList
+                                })
+        i = i + 1
+
+
+    print(_result_list)
+    return _result_list
+
+
+""" 获取教辅的所有章节及小节列表
+    输入： _textbook 教辅编号，int
+    输出： 章节编号及章节名称列表的List:
+            [
+                {
+                    'id' : val,
+                    'name' : val,
+                    'sectionList':[
+                                    'id' : val,
+                                    'name' : val,
+                                ]
+                }
+            ]
+"""
+def getTextbookChapterTree(_textbookId):
+    _chapters = dbProcess.chapterQueryByTextbook(_textbookId)
+    if _chapters is None:
+        logger.error('there is no chapters queryed by textbook %s', _textbookId)
+        return None
+    else:
+        _result_list = []
+
+        cur_chapter=_chapters[0].chapter
+        cur_chapterName=_chapters[0].chapterName
+        sectionList=[]
+        for item in _chapters:
+            if item.chapter == cur_chapter:
+                sectionList.append({
+                    'id': item.section,
+                    'name': item.sectionName
                 })
             else:
-                subjectCd = item.subjectCd
-                json_tmp = {
-                    'subjectCd': item.subjectCd,
-                    'subjectCd_DESC': item.get_subjectCd_display(),
-                    'banji': [{
-                        'banji_DESC': item.get_grade_display() + str(item.classes) + "班",
-                        'school': item.school,
-                        'grade': item.grade,
-                        'classes': item.classes,
-                        'textbook': item.textbook.id,
-                    }]
+                tmp = {
+                    'id': cur_chapter,
+                    'name': cur_chapterName,
+                    'sectionList':sectionList
                 }
-                _result_list.append(json_tmp)
-                i = i + 1
-
+                _result_list.append(tmp)
+                cur_chapter = item.chapter
+                cur_chapterName = item.chapterName
+                sectionList = []
 
         return _result_list
-    else:
-        logger.error(teacher.name+' have no classes')
-        return None
 
 """ 获取教辅的所有章节列表及章节名称
     输入： _textbook 教辅编号，int
@@ -176,10 +230,10 @@ def getTopicListOrderByTopic(_textbook, _chapter, _section, _school, _grade, _cl
                 'option': item.option,
             }
             if _scoreRate is not None:
-                tmp['rate']= str(_scoreRate.rate*100)+'%'
+                tmp['rate']= str(round(_scoreRate.rate*100,2))+'%'
                 tmp['submitNum']= str(_scoreRate.submitNum)+'/'+str(_studentNum)
             else:
-                tmp['rate'] = -1
+                tmp['rate'] = ''
                 tmp['submitNum'] = str(0)+'/'+str(_studentNum)
             _result_list.append(tmp)
 
@@ -195,7 +249,7 @@ def getTopicListOrderByRate(_textbook, _chapter, _section, _school, _grade, _cla
     else:
         _studentNum = getStudentNum(_school, _grade, _classes)
         for item in _scoreRateList:
-            _topic = dbProcess.topicQueryById(item.id)
+            _topic = dbProcess.topicGetById(item.id)
             tmp = {
                 'topicNum': _topic.topicNum,
                 'topicType': _topic.topicType,
@@ -245,6 +299,14 @@ def getChapter_CardsList(_textbook,_chapter):
         return _cards
 
 
+"""
+"""
+def getTopicCount(_textbook, _chapter, _section):
+    _item = dbProcess.topicCountQuery(_textbook, _chapter, _section)
+    if _item is None:
+        return 0
+    else:
+        return _item.topicCount
 
 """
     根据传进来的唯一参数进行去重，由于使用sqlite不属于关系型数据库，django不支持distinct操作

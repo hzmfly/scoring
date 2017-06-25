@@ -180,15 +180,47 @@ function displayTaskList(){
         //没有作业列表
         $("#nodata").show();
     }else{
+        $("#nodata").hide();
         //展示题数
         $('#I_num1').html(global.topicCount);
         //展示统计表格
+        var topicRate_str="";
+        var topicTr="<th>题号</th>";
+        var rateTr="<td>得分率<td>";
         for(var i in global.taskList){
-            var topic_str = '<li rel="'+global.taskList[i].topicNum+'" >'+global.taskList[i].topicNum+'</li>';
-            $('#statistics .topic').find('ul').append(topic_str);
-            var scorate_str= '<li>'+global.taskList[i].rate+'</li>';
-            $('#statistics .scorate').find('ul').append(scorate_str);
+            topicTr += '<th> '+global.taskList[i].topicNum+'</th>';
+            rateTr += '<td>'+global.taskList[i].rate+'</td>';
         }
+        topicRate_str = "<tr>"+topicTr+"</tr><tr>"+rateTr+"</tr>";
+        console.log(topicRate_str);
+          $('#statistics .topicRate').find('table').html(topicRate_str);
+        //展示题目具体信息
+        var topicHtmlArr=[];
+        for(var i in global.taskList){
+
+            topicHtmlArr.push('<li class="questionli">');
+            topicHtmlArr.push('<div class="qustion">');
+            topicHtmlArr.push('<div class="qcont"><span class="qustionno">'+global.taskList[i].topicNum
+                        +'</span>'+global.taskList[i].question+'</div>');
+            if(global.taskList[i].topicType == '1'){
+                topicHtmlArr.push('<div class="distable">'
+                        +'<p>A. </p>'
+                        +'<p>B. </p>'
+                        +'<p>C. </p>'
+                        +'<p>D. </p>'
+                        +'<div style="clear:both;"></div>'
+                        +'</div></div>');
+            }
+            topicHtmlArr.push('<div class="act">');
+            topicHtmlArr.push('<span class="showanalyse"  >得分率：'+global.taskList[i].rate+'</span>');
+            topicHtmlArr.push('<span class="showanalyse"  >提交人数：'+global.taskList[i].submitNum+'</span>');
+            topicHtmlArr.push('<div style="clear: both"></div></div></li>');
+        }
+
+
+        $('#topiclist').html(topicHtmlArr.join(""));
+
+
 
 
 
