@@ -59,6 +59,8 @@ def scan_one_card(path):
 		topic_type = topic[0].topicType
 		print("topic no: " + str(topic_no) + ", topic type: " + str(topic_type))
 		score = scores[i]
+		if score == "N":
+			return
 		if topic_type == 1:
 			if score == topic[0].answer:
 				score = topic[0].point
