@@ -14,6 +14,21 @@ class Textbook(models.Model):
     def __str__(self):  # __unicode__ on Python 2
         return str(self.id)+":"+str(self.textbookName)
 
+class Textbook_Section(models.Model):
+    textbook = models.ForeignKey(
+        'Textbook',
+        on_delete=models.CASCADE,
+    )
+    chapter = models.IntegerField()
+    chapterName = models.CharField(max_length=45)
+    section = models.IntegerField()
+    sectionName = models.CharField(max_length=45)
+    topicCount = models.IntegerField()
+    def __str__(self):  # __unicode__ on Python 2
+        return str(self.textbook.id)+':'+str(self.chapter)+':'+str(self.section)
+    class Meta:
+        unique_together = ("textbook", "chapter", "section")
+
 class Card(models.Model):
     textbook = models.ForeignKey(
         'Textbook',
@@ -25,8 +40,7 @@ class Card(models.Model):
     def __str__(self):  # __unicode__ on Python 2
         return str(self.id)
 
-    class Meta:
-        unique_together = ("textbook", "chapter", "section")
+
 
 class Topic(models.Model):
     textbook = models.ForeignKey(
@@ -53,25 +67,23 @@ class Card_Topic(models.Model):
         'Card',
         on_delete=models.CASCADE,
     )
-    topicNum = models.IntegerField()
+
     topic = models.ForeignKey(
         'Topic',
         on_delete=models.CASCADE,
     )
-    topicType = models.IntegerField(choices=constant.TOPIC_TYPE)
-    addr1 = models.CharField(max_length=10)
-    addr2 = models.CharField(max_length=10)
+    addr1 = models.CharField(max_length=10, blank=True)
+    addr2 = models.CharField(max_length=10, blank=True)
     addr3 = models.CharField(max_length=10, blank=True)
     addr4 = models.CharField(max_length=10, blank=True)
-    answer = models.CharField(max_length=400)  # 选择题需要
-    point = models.IntegerField()
+
     tms = models.DateTimeField(auto_now=True)
 
     def __str__(self):  # __unicode__ on Python 2
-        return str(self.card.id)+"-"+str(self.topicNum)+":"+str(self.topic.id)
+        return str(self.card.id)+":"+str(self.topic.id)
 
     class Meta:
-        unique_together = ("card", "topicNum")
+        unique_together = ("card","topic")
 
 class Student(models.Model):
     name = models.CharField(max_length=30)
@@ -113,7 +125,7 @@ class Teacher_Classes(models.Model):
         return str(self.teacher.id)+":"+str(self.grade)+"-"+str(self.classes)
 
     class Meta:
-        unique_together = ("teacher", "grade", "classes")
+        unique_together = ("teacher", "school","grade", "classes","textbook")
 
 
 class Task(models.Model):

@@ -6,6 +6,7 @@ from scoringCore.models import Student
 from scoringCore.models import Task
 from scoringCore.models import Topic
 from scoringCore.models import ScoreRate
+from scoringCore.models import Textbook_Section
 from django.core.exceptions import ObjectDoesNotExist
 import logging
 
@@ -51,8 +52,7 @@ def insertTeacher_Classes(param):
 
 """ 按教辅查询章节列表"""
 def chapterQueryByTextbook(_textbook):
-
-    _obj = Topic.objects.filter(textbook=_textbook).order_by("chapter")
+    _obj = Textbook_Section.objects.filter(textbook=_textbook).order_by("chapter")
     if(_obj.exists()):
         return _obj
     else:
@@ -69,6 +69,24 @@ def sectionQueryByTextbookAndChapter(_textbook, _chapter):
         logger.error('there is no section queryed by textbook %s chapter %s ', _textbook, _chapter)
         return None
 
+"""
+"""
+
+def topicCountQuery(_textbook,_chapter,_section):
+    try:
+        _obj = Textbook_Section.objects.get(textbook=_textbook, chapter=_chapter, section=_section)
+    except ObjectDoesNotExist:
+        logger.error('there is no item queryed by textbook %s,chapter %s ,section %s', _textbook, _chapter, _section)
+        return None
+    return _obj
+
+def topicQueryById(_id):
+    try:
+        _result = Topic.objects.filter(id=_id)
+    except ObjectDoesNotExist:
+        logger.debug('there is no topic queryed by id %d ', _id)
+        return None
+    return _result
 
 """ 按小节查询题目，按题号排序"""
 def topicQueryBySection(_textbook,_chapter,_section):
@@ -99,7 +117,7 @@ def rateQueryBySectionAndClasses(_textbook, _chapter, _section, _school, _grade,
 
 
 """ 按题号查题目"""
-def topicQueryById(_topicId):
+def topicGetById(_topicId):
     try:
         _result = Topic.objects.get(id=_topicId)
     except ObjectDoesNotExist:
@@ -115,3 +133,47 @@ def studentQueryByClasses(_school, _grade, _classes):
     else:
         logger.error('there is no student queryed by grade %s,classes %s ', _grade, _classes)
         return None
+
+#add by jiangjiawei
+def studentsQueryById(_id):
+    try:
+        _result = Student.objects.filter(id=_id).order_by("id")
+    except ObjectDoesNotExist:
+        logger.debug('there is no student queryed by id %d ', _id)
+        return None
+    return _result
+
+def topicQueryByCardAndTopic(_card, _topic):
+    try:
+        _result = Card_Topic.objects.filter(card_id=_card, topic_id=_topic)
+    except ObjectDoesNotExist:
+        logger.debug('there is no topic queryed by card %d, topic %d ', _card, _topic)
+        return None
+    return _result
+
+def insertTask(_task):
+    try:
+        _task.save()
+    except:
+        return False;
+
+def insertScoreRate(_score_rate):
+    try:
+        _score_rate.save()
+    except:
+        return False
+
+def updateScoreRate(id, submitNum, rate):
+    try:
+        ScoreRate.objects.filter(id=id).update(submitNum = submitNum)
+        ScoreRate.objects.filter(id=id).update(rate = rate)
+    except:
+        return False
+
+def scoreRateQueryByTopic(_topic):
+    try:
+        _result = ScoreRate.objects.filter(topic=_topic)
+    except ObjectDoesNotExist:
+        logger.debug('there is no scoreRate queryed by topic %d', _topic)
+        return None
+    return _result

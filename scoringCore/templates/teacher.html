@@ -1,0 +1,104 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style="min-height: 383px;"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>个人主页</title>
+     <link href="{% static 'css/public.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/llkt2016060618.css' %}" rel="stylesheet">
+     <link href="{% static 'css/zTreeStyle.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dialog.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dialog.css' %}" rel="stylesheet">
+    <style type="text/css">
+        .queslist img {
+            vertical-align: middle;
+        }
+    </style>
+
+    <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/teacher.js' %}"></script>
+    <script src="{% static 'js/zTree.js' %}"></script>
+</head>
+<body style="min-height: 383px;">
+
+
+<div class="navigator">
+    <div>
+
+        <div class="menuItem right noh">
+            <div class="profile">
+                <div class="userName"><span title="测试老赵">测试老赵</span><div class="spliter"></div>
+                </div>
+                <div class="exit" ><span>退出</span></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="w1002 pr">
+        <div id="JiaoxFuQuestion" style="">
+            <table class="jffilter" cellspacing="0" cellpadding="0">
+                <tbody><tr class="filter_item">
+                    <th>学科</th>
+                    <td>
+                        <ul class="xueke"></ul>
+                    </td>
+                </tr>
+                <tr class="filter_item">
+                    <th>班级</th>
+                    <td>
+                        <ul class="banji"></ul>
+                    </td>
+                </tr>
+                <tr class="filter_item">
+                    <th>教辅</th>
+                    <td>
+                        <ul class="jiaofu"></ul>
+                    </td>
+                </tr>
+            </tbody></table>
+
+    <div class="leftnavd">
+
+        <ul id="tree" class="lenvad ztree" style="-moz-user-select: none;">
+
+        </ul>
+    </div>
+    <div class="rdbfd">
+                <!--右侧顶部-->
+                <div class="rid_top">
+                    <h2><span>当前 &gt;</span><span class="currSectionName"></span></h2>
+                    <div class="quesnum">共<span id="I_num1">0</span>道</div>
+
+                </div>
+                <div id="statistics" class="papersx ">
+                    <div class="topicRate ">
+                        <table></table>
+
+
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+
+                <!--列表-->
+                <div class="questionLst ">
+                    <ul id="topiclist" >
+
+                    </ul>
+                </div>
+
+
+                    <div id="nodata" style="margin-left:300px">
+                        <img src="{% static 'css/img/nodata.png' %}" /><br />
+                        暂无题目
+                    </div>
+
+    </div>
+</div>
+
+<link href="{% static 'css/jquery.css' %}" rel="stylesheet">
+</body></html>
